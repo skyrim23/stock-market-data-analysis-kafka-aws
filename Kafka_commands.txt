@@ -1,0 +1,36 @@
+Get kafka in EC2 
+------------------------
+ wget https://downloads.apache.org/kafka/3.4.1/kafka_2.12-3.4.1.tgz
+ tar -xvf kafka_2.12-3.4.1.tgz
+ 
+ 
+ Install jdk on aws server EC2 
+ -------------------------------
+ sudo yum install java-1.8.0-amazon-corretto-devel
+  
+  
+ Start Zoo-keeper:
+-------------------------------
+bin/zookeeper-server-start.sh config/zookeeper.properties
+  
+  
+ Start Kafka-server:
+----------------------------------------
+export KAFKA_HEAP_OPTS="-Xmx528M -Xms256M"
+bin/kafka-server-start.sh config/server.properties
+  
+  Create the topic:
+-----------------------------
+bin/kafka-topics.sh --create --topic transactions --bootstrap-server {aws-public-ip-address-of-EC2}:9092 --replication-factor 1 --partitions 1
+
+Listing kafka topics:
+--------------------------
+bin/kafka-topics.sh --list --bootstrap-server {aws-public-ip-address-of-EC2}:9092
+
+Start Producer:
+--------------------------
+bin/kafka-console-producer.sh --topic transactions --bootstrap-server {aws-public-ip-address-of-EC2}:9092
+
+Start Consumer:
+-------------------------
+bin/kafka-console-consumer.sh --topic transactions --bootstrap-server {aws-public-ip-address-of-EC2}:9092
